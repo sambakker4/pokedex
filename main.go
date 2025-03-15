@@ -3,33 +3,55 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"strings"
 	"os"
+	"strings"
+	"time"
+	"github.com/sambakker4/pokedex/internal/pokeapi"
 )
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*Config) error
 }
 
-func getCommands() map[string]cliCommand{
+type Config struct {
+	Cache    pokeapi.Cache
+	Next     string
+	Previous string
+}
+
+func getCommands() map[string]cliCommand {
 	return map[string]cliCommand{
 		"exit": {
 			name:        "exit",
 			description: "Exit the Pokedex",
 			callback:    commandExit,
 		},
-		"help" : {
-			name: "help",
+		"help": {
+			name:        "help",
 			description: "Displays the help message",
-			callback: commandHelp,
+			callback:    commandHelp,
+		},
+		"map": {
+			name:        "map",
+			description: "maps 20 locations every time its used",
+			callback:    commandMap,
+		},
+		"mapb": {
+			name:        "map back",
+			description: "maps back 20 locations every time its used (reverse of map)",
+			callback:    commandMapBack,
 		},
 	}
 }
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
+	config := &Config{
+		Next:  "https://pokeapi.co/api/v2/location-area/",
+		Cache: pokeapi.NewCache(20 * time.Second),
+	}
 	for {
 		fmt.Printf("Pokedex > ")
 		scanner.Scan()
@@ -45,7 +67,7 @@ func main() {
 			continue
 		}
 
-		err := getCommands()[command].callback()
+		err := getCommands()[command].callback(config)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 		}
@@ -61,5 +83,3 @@ func cleanInput(text string) []string {
 	}
 	return newSlice
 }
-
-
