@@ -10,7 +10,6 @@ import (
 
 func commandExplore(config *Config, location string) error {
 	url := config.URL + "location-area/" + location
-	fmt.Printf("Exploring " + location + "...\n")
 
 	var exploring Explore
 	if val, ok := config.Cache.Get(url); ok {
@@ -36,6 +35,7 @@ func commandExplore(config *Config, location string) error {
 			return err
 		}
 	}
+	fmt.Printf("Exploring " + location + "...\n")
 	fmt.Println("Found Pokemon:")
 
 	for _, pokemon := range exploring.PokemonEncounters {

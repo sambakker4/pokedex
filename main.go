@@ -45,10 +45,15 @@ func getCommands() map[string]cliCommand {
 			description: "maps back 20 locations every time its used (reverse of map)",
 			callback:    commandMapBack,
 		},
-		"explore" : {
-			name: "explore",
+		"explore": {
+			name:        "explore",
 			description: "explores all pokemon in a given location",
-			callback: commandExplore,
+			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "attempts to catch specified Pokemon",
+			callback:    commmandCatch,
 		},
 	}
 }
@@ -58,7 +63,7 @@ func main() {
 	config := &Config{
 		Next:  "https://pokeapi.co/api/v2/location-area/",
 		Cache: pokeapi.NewCache(20 * time.Second),
-		URL: "https://pokeapi.co/api/v2/",
+		URL:   "https://pokeapi.co/api/v2/",
 	}
 	for {
 		fmt.Printf("Pokedex > ")
