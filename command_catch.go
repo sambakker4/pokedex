@@ -38,14 +38,14 @@ func commmandCatch(config *Config, pokemonName string) error {
 	experience := pokemon.BaseExperience
 
 	var caught bool
-	chance := 100.0 - (float64(experience) * 0.1) 
+	chance := rand.Intn(experience) 
 	if chance < 1 {
 		chance = 1
 	} else if chance > 95{
 		chance = 95
 	}
 
-	if rand.Float64() * 100.0 < chance {
+	if  chance > 40 {
 		caught = false
 		fmt.Printf("%v escaped!\n", pokemonName)
 	} else {
