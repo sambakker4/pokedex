@@ -34,11 +34,11 @@ func commmandCatch(config *Config, pokemonName string) error {
 			return err
 		}
 	}
-	fmt.Printf("Throwing a ball at %v\n", pokemonName)
+	fmt.Printf("Throwing a Pokeball at %v...\n", pokemonName)
 	experience := pokemon.BaseExperience
 
 	var caught bool
-	chance := 100.0 - (float64(experience) * 0.25) + float64(rand.Intn(experience))
+	chance := 100.0 - (float64(experience) * 0.1) 
 	if chance < 1 {
 		chance = 1
 	} else if chance > 95{
