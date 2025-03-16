@@ -7,7 +7,7 @@ import (
 
 type Cache struct {
 	cacheEntries map[string]cacheEntry
-	mutex        sync.Mutex
+	mutex        *sync.Mutex
 }
 
 type cacheEntry struct {
@@ -16,7 +16,7 @@ type cacheEntry struct {
 }
 
 func NewCache(interval time.Duration) Cache {
-	cache := Cache{cacheEntries: make(map[string]cacheEntry)}
+	cache := Cache{cacheEntries: make(map[string]cacheEntry), mutex: &sync.Mutex{}}
 	go cache.readLoop(time.Duration(interval))
 	return cache
 	

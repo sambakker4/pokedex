@@ -21,7 +21,7 @@ type LocationAreas struct {
 }
 
 
-func commandMap(config *Config) error {
+func commandMap(config *Config, s string) error {
 	var locations LocationAreas
 
 	if data, ok := config.Cache.Get(config.Next); ok{
@@ -60,7 +60,7 @@ func commandMap(config *Config) error {
 	return nil
 }
 
-func commandMapBack(config *Config) error {
+func commandMapBack(config *Config,s string) error {
 	if config.Previous == ""{
 		return errors.New("Map Back command must have something to map back to")
 	}

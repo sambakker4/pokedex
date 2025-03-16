@@ -6,19 +6,21 @@ import (
 	"os"
 	"strings"
 	"time"
+
 	"github.com/sambakker4/pokedex/internal/pokeapi"
 )
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*Config) error
+	callback    func(*Config, string) error
 }
 
 type Config struct {
 	Cache    pokeapi.Cache
 	Next     string
 	Previous string
+	URL      string
 }
 
 func getCommands() map[string]cliCommand {
@@ -39,9 +41,14 @@ func getCommands() map[string]cliCommand {
 			callback:    commandMap,
 		},
 		"mapb": {
-			name:        "map back",
+			name:        "mapb",
 			description: "maps back 20 locations every time its used (reverse of map)",
 			callback:    commandMapBack,
+		},
+		"explore" : {
+			name: "explore",
+			description: "explores all pokemon in a given location",
+			callback: commandExplore,
 		},
 	}
 }
@@ -51,6 +58,7 @@ func main() {
 	config := &Config{
 		Next:  "https://pokeapi.co/api/v2/location-area/",
 		Cache: pokeapi.NewCache(20 * time.Second),
+		URL: "https://pokeapi.co/api/v2/",
 	}
 	for {
 		fmt.Printf("Pokedex > ")
@@ -61,13 +69,20 @@ func main() {
 			continue
 		}
 
+		var argument string
 		command := cleanedInput[0]
+		if len(cleanedInput) > 1 {
+			argument = cleanedInput[1]
+		} else {
+			argument = ""
+		}
+
 		if _, ok := getCommands()[command]; !ok {
 			fmt.Println("Unknown Command")
 			continue
 		}
 
-		err := getCommands()[command].callback(config)
+		err := getCommands()[command].callback(config, argument)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 		}
